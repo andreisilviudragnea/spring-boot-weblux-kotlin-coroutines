@@ -2,7 +2,7 @@
 Spring Boot + WebFlux + Kotlin coroutines example project
 
 Technology stack includes:
-- Java 14
+- Java 15
 - Gradle build system with Kotlin DSL build script
 - Spring Boot
 - Spring WebFlux
