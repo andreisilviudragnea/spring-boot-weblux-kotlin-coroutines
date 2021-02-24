@@ -34,18 +34,18 @@ class ProductHandlerTest {
     @Test
     fun `get all products`() {
         val productsFlow = flowOf(
-          Product(1, "product1", 1000.0F),
-          Product(2, "product2", 2000.0F),
-          Product(3, "product3", 3000.0F)
+            Product(1, "product1", 1000.0F),
+            Product(2, "product2", 2000.0F),
+            Product(3, "product3", 3000.0F)
         )
 
         given(productsRepositoryRelationalDatabase.getAllProducts()).willReturn(productsFlow)
 
         client.get()
-          .uri("/v3")
-          .exchange()
-          .expectStatus()
-          .isOk
-          .expectBodyList<Product>()
+            .uri("/v3")
+            .exchange()
+            .expectStatus()
+            .isOk
+            .expectBodyList<Product>()
     }
 }

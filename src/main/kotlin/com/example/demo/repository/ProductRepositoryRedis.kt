@@ -16,9 +16,9 @@ import kotlin.random.Random
 class ProductRepositoryRedis(private val reactiveRedisTemplate: ReactiveRedisTemplate<String, Product>) : ProductRepository {
     override suspend fun getProductById(id: Int): Product? {
         return reactiveRedisTemplate
-                .opsForValue()
-                .get(id.toString())
-                .awaitFirstOrNull()
+            .opsForValue()
+            .get(id.toString())
+            .awaitFirstOrNull()
     }
 
     override suspend fun addNewProduct(name: String, price: Float) {
@@ -29,8 +29,8 @@ class ProductRepositoryRedis(private val reactiveRedisTemplate: ReactiveRedisTem
         val product = Product(id, name, price)
 
         val setResult = reactiveRedisTemplate
-                .opsForValue()
-                .setAndAwait(id.toString(), product)
+            .opsForValue()
+            .setAndAwait(id.toString(), product)
 
         if (!setResult) {
             throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -41,7 +41,7 @@ class ProductRepositoryRedis(private val reactiveRedisTemplate: ReactiveRedisTem
 
     override fun getAllProducts(): Flow<Product> {
         return reactiveRedisTemplate
-                .opsForList()
-                .rangeAsFlow("products", 0, -1)
+            .opsForList()
+            .rangeAsFlow("products", 0, -1)
     }
 }

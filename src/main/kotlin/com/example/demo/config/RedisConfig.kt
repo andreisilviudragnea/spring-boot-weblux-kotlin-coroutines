@@ -17,11 +17,11 @@ class RedisConfig(private val factory: RedisConnectionFactory) {
     @Bean
     fun reactiveRedisTemplate(factory: ReactiveRedisConnectionFactory): ReactiveRedisTemplate<String, Product> {
         return ReactiveRedisTemplate(
-                factory,
-                RedisSerializationContext
-                        .newSerializationContext<String, Product>(StringRedisSerializer())
-                        .value(Jackson2JsonRedisSerializer(Product::class.java))
-                        .build()
+            factory,
+            RedisSerializationContext
+                .newSerializationContext<String, Product>(StringRedisSerializer())
+                .value(Jackson2JsonRedisSerializer(Product::class.java))
+                .build()
         )
     }
 
