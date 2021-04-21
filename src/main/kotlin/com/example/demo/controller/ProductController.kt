@@ -24,6 +24,11 @@ class ProductController(
     private val productRepositoryReactive: ReactiveProductRepository
 ) {
 
+    @GetMapping("/exception")
+    fun exception() {
+        throw Exception1("", Exception2())
+    }
+
     @GetMapping("/{id}")
     fun findOne(@PathVariable id: Int): Mono<Product> {
         return productRepositoryReactive.getProductById(id)
