@@ -37,7 +37,7 @@ dependencies {
 
     developmentOnly("org.springframework.boot:spring-boot-devtools")
 
-    runtimeOnly("dev.miku:r2dbc-mysql")
+    runtimeOnly("dev.miku:r2dbc-mysql:0.8.2.RELEASE")
     runtimeOnly("mysql:mysql-connector-java")
 
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
