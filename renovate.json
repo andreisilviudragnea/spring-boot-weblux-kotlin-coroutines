@@ -3,5 +3,13 @@
     "config:base",
     ":automergeAll",
     ":automergeBranch"
+  ],
+  "packageRules": [
+    {
+      "groupName": "Kotlin",
+      "matchPackagePrefixes": [
+        "org.jetbrains.kotlin"
+      ]
+    }
   ]
 }
