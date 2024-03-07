@@ -21,29 +21,33 @@ import reactor.core.publisher.Mono
 @RequestMapping("/v1")
 class ProductController(
     private val webClient: WebClient,
-    private val productRepositoryReactive: ReactiveProductRepository
+    private val productRepositoryReactive: ReactiveProductRepository,
 ) {
-
     @GetMapping("/exception")
     fun exception() {
         throw Exception1("", Exception2())
     }
 
     @GetMapping("/{id}")
-    fun findOne(@PathVariable id: Int): Mono<Product> {
+    fun findOne(
+        @PathVariable id: Int,
+    ): Mono<Product> {
         return productRepositoryReactive.getProductById(id)
     }
 
     @GetMapping("/{id}/stock")
-    fun findOneInStock(@PathVariable id: Int): Mono<ProductStockView> {
+    fun findOneInStock(
+        @PathVariable id: Int,
+    ): Mono<ProductStockView> {
         val product = productRepositoryReactive.getProductById(id)
 
-        val stockQuantity = webClient
-            .get()
-            .uri("/v1/stock-service/product/$id/quantity")
-            .accept(MediaType.APPLICATION_JSON)
-            .retrieve()
-            .bodyToMono<Int>()
+        val stockQuantity =
+            webClient
+                .get()
+                .uri("/v1/stock-service/product/$id/quantity")
+                .accept(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .bodyToMono<Int>()
 
         return product.zipWith(stockQuantity) { productInStock, stockQty ->
             ProductStockView(productInStock, stockQty)
@@ -51,7 +55,9 @@ class ProductController(
     }
 
     @GetMapping("/stock-service/product/{id}/quantity")
-    fun getStockQuantity(@PathVariable id: Int): Mono<Int> {
+    fun getStockQuantity(
+        @PathVariable id: Int,
+    ): Mono<Int> {
         return Mono.just(2 * id)
     }
 
@@ -62,7 +68,9 @@ class ProductController(
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    fun create(@RequestBody product: Product): Mono<Void> {
+    fun create(
+        @RequestBody product: Product,
+    ): Mono<Void> {
         return productRepositoryReactive.addNewProduct(product.name, product.price)
     }
 }

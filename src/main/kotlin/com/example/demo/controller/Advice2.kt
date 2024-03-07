@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler
 @ControllerAdvice
 @Order(2)
 class Advice2 {
-
     @ExceptionHandler
     fun handle(e: Exception1) {
         println("Handled exception 1")
