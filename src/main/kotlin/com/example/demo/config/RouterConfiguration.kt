@@ -7,12 +7,12 @@ import org.springframework.web.reactive.function.server.coRouter
 
 @Configuration
 class RouterConfiguration {
-
     @Bean
-    fun productRoutes(productsHandler: ProductsHandler) = coRouter {
-        GET("/v3", productsHandler::findAll)
-        POST("/v3", productsHandler::addNewProduct)
-        GET("/v3/{id}", productsHandler::findOne)
-        GET("/v3/{id}/stock", productsHandler::findOneInStock)
-    }
+    fun productRoutes(productsHandler: ProductsHandler) =
+        coRouter {
+            GET("/v3", productsHandler::findAll)
+            POST("/v3", productsHandler::addNewProduct)
+            GET("/v3/{id}", productsHandler::findOne)
+            GET("/v3/{id}/stock", productsHandler::findOneInStock)
+        }
 }

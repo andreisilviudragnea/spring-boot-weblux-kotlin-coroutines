@@ -6,5 +6,5 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 data class ConfigProperties(
     val stringValue: String,
     val intValue: Int,
-    val listValue: List<String>
+    val listValue: List<String>,
 )

@@ -17,11 +17,10 @@ import org.springframework.test.web.reactive.server.expectBodyList
 import org.springframework.web.reactive.function.client.WebClient
 
 @WebFluxTest(
-    excludeAutoConfiguration = [ReactiveUserDetailsServiceAutoConfiguration::class, ReactiveSecurityAutoConfiguration::class]
+    excludeAutoConfiguration = [ReactiveUserDetailsServiceAutoConfiguration::class, ReactiveSecurityAutoConfiguration::class],
 )
 @ContextConfiguration(classes = [ProductsHandler::class, RouterConfiguration::class])
 class ProductHandlerTest {
-
     @Autowired
     private lateinit var client: WebTestClient
 
@@ -33,11 +32,12 @@ class ProductHandlerTest {
 
     @Test
     fun `get all products`() {
-        val productsFlow = flowOf(
-            Product(1, "product1", 1000.0F),
-            Product(2, "product2", 2000.0F),
-            Product(3, "product3", 3000.0F)
-        )
+        val productsFlow =
+            flowOf(
+                Product(1, "product1", 1000.0F),
+                Product(2, "product2", 2000.0F),
+                Product(3, "product3", 3000.0F),
+            )
 
         given(productsRepositoryRelationalDatabase.getAllProducts()).willReturn(productsFlow)
 

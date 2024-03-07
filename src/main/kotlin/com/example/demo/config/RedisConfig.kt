@@ -13,7 +13,6 @@ import org.springframework.data.redis.serializer.StringRedisSerializer
 
 @Configuration
 class RedisConfig(private val factory: RedisConnectionFactory) {
-
     @Bean
     fun reactiveRedisTemplate(factory: ReactiveRedisConnectionFactory): ReactiveRedisTemplate<String, Product> {
         return ReactiveRedisTemplate(
@@ -21,7 +20,7 @@ class RedisConfig(private val factory: RedisConnectionFactory) {
             RedisSerializationContext
                 .newSerializationContext<String, Product>(StringRedisSerializer())
                 .value(Jackson2JsonRedisSerializer(Product::class.java))
-                .build()
+                .build(),
         )
     }
 

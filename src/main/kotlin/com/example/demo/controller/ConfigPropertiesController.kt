@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/configs")
 class ConfigPropertiesController(val configProperties: ConfigProperties) {
-
     @GetMapping("/string")
     fun getStringConfig() = configProperties.stringValue
 

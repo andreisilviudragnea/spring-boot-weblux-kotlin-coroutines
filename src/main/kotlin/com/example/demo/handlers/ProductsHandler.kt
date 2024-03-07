@@ -20,33 +20,35 @@ import org.springframework.web.reactive.function.server.json
 @Component
 class ProductsHandler(
     private val webClient: WebClient,
-    private val productRepositoryRedis: ProductRepository
+    private val productRepositoryRedis: ProductRepository,
 ) {
-
     suspend fun findAll(request: ServerRequest): ServerResponse =
         ServerResponse.ok().json().bodyAndAwait(productRepositoryRedis.getAllProducts())
 
-    suspend fun findOneInStock(request: ServerRequest): ServerResponse = coroutineScope {
-        val id = request.pathVariable("id").toInt()
+    suspend fun findOneInStock(request: ServerRequest): ServerResponse =
+        coroutineScope {
+            val id = request.pathVariable("id").toInt()
 
-        val product = async {
-            productRepositoryRedis.getProductById(id)
+            val product =
+                async {
+                    productRepositoryRedis.getProductById(id)
+                }
+
+            val quantity =
+                async {
+                    webClient
+                        .get()
+                        .uri("/v1/stock-service/product/$id/quantity")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .retrieve()
+                        .awaitBody<Int>()
+                }
+
+            ServerResponse
+                .ok()
+                .json()
+                .bodyValueAndAwait(ProductStockView(product.await()!!, quantity.await()))
         }
-
-        val quantity = async {
-            webClient
-                .get()
-                .uri("/v1/stock-service/product/$id/quantity")
-                .accept(MediaType.APPLICATION_JSON)
-                .retrieve()
-                .awaitBody<Int>()
-        }
-
-        ServerResponse
-            .ok()
-            .json()
-            .bodyValueAndAwait(ProductStockView(product.await()!!, quantity.await()))
-    }
 
     suspend fun findOne(request: ServerRequest): ServerResponse {
         val id = request.pathVariable("id").toInt()

@@ -21,16 +21,20 @@ class ProductRepositoryRedis(private val reactiveRedisTemplate: ReactiveRedisTem
             .awaitFirstOrNull()
     }
 
-    override suspend fun addNewProduct(name: String, price: Float) {
+    override suspend fun addNewProduct(
+        name: String,
+        price: Float,
+    ) {
         val id = Random.nextInt()
 
         println("Created product with id=$id")
 
         val product = Product(id, name, price)
 
-        val setResult = reactiveRedisTemplate
-            .opsForValue()
-            .setAndAwait(id.toString(), product)
+        val setResult =
+            reactiveRedisTemplate
+                .opsForValue()
+                .setAndAwait(id.toString(), product)
 
         if (!setResult) {
             throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR)

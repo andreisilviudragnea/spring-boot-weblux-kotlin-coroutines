@@ -22,31 +22,37 @@ import org.springframework.web.reactive.function.client.awaitBody
 @RequestMapping("/v2")
 class ProductControllerCoroutines(
     private val webClient: WebClient,
-    private val productRepositoryRedis: ProductRepository
+    private val productRepositoryRedis: ProductRepository,
 ) {
-
     @GetMapping("/{id}")
-    suspend fun findOne(@PathVariable id: Int): Product? {
+    suspend fun findOne(
+        @PathVariable id: Int,
+    ): Product? {
         return productRepositoryRedis.getProductById(id)
     }
 
     @GetMapping("/{id}/stock")
-    suspend fun findOneInStock(@PathVariable id: Int): ProductStockView = coroutineScope {
-        val product = async {
-            productRepositoryRedis.getProductById(id)
-        }
+    suspend fun findOneInStock(
+        @PathVariable id: Int,
+    ): ProductStockView =
+        coroutineScope {
+            val product =
+                async {
+                    productRepositoryRedis.getProductById(id)
+                }
 
-        val quantity = async {
-            webClient
-                .get()
-                .uri("/v1/stock-service/product/$id/quantity")
-                .accept(APPLICATION_JSON)
-                .retrieve()
-                .awaitBody<Int>()
-        }
+            val quantity =
+                async {
+                    webClient
+                        .get()
+                        .uri("/v1/stock-service/product/$id/quantity")
+                        .accept(APPLICATION_JSON)
+                        .retrieve()
+                        .awaitBody<Int>()
+                }
 
-        ProductStockView(product.await()!!, quantity.await())
-    }
+            ProductStockView(product.await()!!, quantity.await())
+        }
 
     @GetMapping
     fun findAll(): Flow<Product> {
@@ -55,7 +61,9 @@ class ProductControllerCoroutines(
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    suspend fun create(@RequestBody product: Product) {
+    suspend fun create(
+        @RequestBody product: Product,
+    ) {
         productRepositoryRedis.addNewProduct(product.name, product.price)
     }
 }
